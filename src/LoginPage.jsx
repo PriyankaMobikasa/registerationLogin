@@ -109,7 +109,11 @@ const LoginPage = () => {
                     alert(response.message)
                 }
             })
+
         }
+
+
+
 
         // let data = { email: loginFormDetails.email.value, password: loginFormDetails.password.value }
         // authentic.login("http://localhost:5000/users/login", data, response => {
