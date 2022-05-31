@@ -1,12 +1,16 @@
 import React from 'react';
 import './Users.css';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchFailure } from './redux/action/userAction';
 
 const Users = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const logout = (e) => {
     e.preventDefault();
     localStorage.clear();
+    dispatch(fetchFailure())
     navigate('/')
   }
   return (

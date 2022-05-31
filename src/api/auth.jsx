@@ -14,7 +14,6 @@ authentic.login = async (url, body, cb = f => f) => {
         else {
             console.log("not working")
         }
-
     } catch (error) {
         console.log(error, "error from auth")
     }

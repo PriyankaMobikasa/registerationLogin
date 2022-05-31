@@ -8,10 +8,39 @@ import { useNavigate } from 'react-router-dom';
 // import axios from './api/axios';
 import axios from 'axios';
 import authentic from './api/auth';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchRequestAction } from './redux/action/userAction';
 
 
 const LoginPage = () => {
-    const navigate_page = useNavigate()
+    const navigate_page = useNavigate();
+    const selector = useSelector(state => state);
+    const { data } = useSelector(state => state.auth);
+    const {error} = useSelector(state => state.auth);
+    console.log(error, "error")
+    console.log("Selector", selector);
+    console.log("data", data)
+    const dispatch = useDispatch();
+    const signUpRedirection = false
+
+    useEffect(() => {
+        if(localStorage.getItem('Token')){
+            navigate_page("/user")
+        }
+
+        // if(data){
+        //     navigate_page("/user")
+        // }
+
+        // console.log('token is ',token)
+    
+        
+    }, [data])
+
+    // if(error){
+    //     alert("Record not found")
+    // }
+
 
     const google_id = "324489282442-45202uefkq3jm1n42hvc3cp712ef6pnc.apps.googleusercontent.com";
     const [loginFormDetails, setLoginFormDetails] = useState({
@@ -98,17 +127,40 @@ const LoginPage = () => {
         }
         if (res == false) {
             let data = { email: loginFormDetails.email.value, password: loginFormDetails.password.value }
-            authentic.login("http://localhost:5000/users/login", data, response => {
-                if (response.status) {
-                    localStorage.setItem("Token", response.token);
-                    localStorage.setItem('data', response.record.name)
-                    navigate('/user')
-                }
-                else {
-                    console.log(response.message)
-                    alert(response.message)
-                }
-            })
+            // authentic.login("http://localhost:5000/users/login", data, response => {
+            //     if (response.status) {
+            //         localStorage.setItem("Token", response.token);
+            //         localStorage.setItem('data', response.record.name)
+            //         navigate('/user')
+            //     }
+            //     else {
+            //         console.log(response.message)
+            //         alert(response.message)
+            //     }
+            // })
+
+            // dispatch(loginFetch('http://localhost:5000/users/login', data, response => {
+            //     console.log(response.data.status, "response from loginPage")
+            //     if (response.data.status) {
+            //         localStorage.setItem("Token", response.token);
+            //         navigate('/user')
+            //     }
+            //     else{
+            //         console.log(response.message)
+            //         alert(response.data.message)
+            //     }
+            // }))
+
+            dispatch(fetchRequestAction("http://localhost:5000/users/login", data));
+            
+
+            // if (localStorage.getItem('Token')) {
+            //     navigate('/user')
+            // }
+            // else {
+            //     alert("Record not found")
+            // }
+
 
         }
 
@@ -131,10 +183,22 @@ const LoginPage = () => {
 
     const googleSuccess = (logdata) => {
         console.log(logdata, "logdata");
+        navigate('/user')
     }
 
     const googleFailure = () => {
 
+    }
+
+    // useEffect(() => {
+    //     if(signUpRedirection = true){
+            
+    //     }
+    // },[])
+
+    const signUp = (e) => {
+        e.preventDefault();
+        signUpRedirection = true;
     }
 
     return (
@@ -195,7 +259,8 @@ const LoginPage = () => {
                         </div>
                         <div className='form-element'>
                             <div className='signUp-text'>
-                                <span>Don’t have an account?</span> <span className='sign_up_color' onClick={() => navigate("register")}>Sign up fo free!</span>
+                                {/* <span>Don’t have an account?</span> <span className='sign_up_color' onClick={() => navigate("register")}>Sign up fo free!</span> */}
+                                <span>Don’t have an account?</span> <span className='sign_up_color' onClick={() => navigate_page('register')}>Sign up fo free!</span>
                             </div>
                         </div>
                     </div>

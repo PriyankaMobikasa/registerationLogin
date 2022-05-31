@@ -2,10 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authentic from './api/auth';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchRequestAction } from './redux/action/userAction';
 
 const RegistrationForm = () => {
-  const navigate_page = useNavigate()
+  const navigate_page = useNavigate();
+  const selector = useSelector(state => state);
+  const { data } = useSelector(state => state.auth);
+  // console.log("token from Registration Form", token)
   let show_popup = false;
+  // console.log(selector, "selector")
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if(localStorage.getItem('Token')){
+      navigate_page("/user")
+    }
+    
+    // if(token){
+    //   navigate_page("/user")
+    // }
+
+  }, [data])
+
+
 
   const [registerFormDetails, setRegisterFormDetails] = useState({
     name: {
@@ -66,7 +86,7 @@ const RegistrationForm = () => {
           }
         }
       ))
-        res = true;
+      res = true;
     }
 
     if (registerFormDetails.email.value == "") {
@@ -110,45 +130,56 @@ const RegistrationForm = () => {
       ))
       res = true
     }
-    if(res == false)
-    {
-      let data = { name:registerFormDetails.name.value, email: registerFormDetails.email.value, password: registerFormDetails.password.value }
-        authentic.register("http://localhost:5000/users/register", data, response => {
-            if (response.status) {
-              localStorage.setItem("Token", response.token);
-              localStorage.setItem('data', response.record.name)
-              // setTimeout(() => {
-                
-                navigate('/user')
-              // }, 1500)
-                // console.log(response.status, "status")
-                // navigate('/user')
-            }
-    
-        })
+    if (res == false) {
+      let data = { name: registerFormDetails.name.value, email: registerFormDetails.email.value, password: registerFormDetails.password.value }
+      //   authentic.register("http://localhost:5000/users/register", data, response => {
+      //       if (response.status) {
+      //         localStorage.setItem("Token", response.token);
+      //         localStorage.setItem('data', response.record.name)
+      //         // setTimeout(() => {
+
+      //           navigate('/user')
+      //         // }, 1500)
+      //           // console.log(response.status, "status")
+      //           // navigate('/user')
+      //       }
+
+      //   })
+
+      // dispatch(fetchRequestAction('http://localhost:5000/users/register', data, response => {
+      //   if(response.status){
+      //     navigate('/user')
+      //   }
+      // }))
+
+      dispatch(fetchRequestAction("http://localhost:5000/users/register", data))
+      // if(selector.fetch.token){
+      //   navigate('/user')
+      // }
+
     }
-    let reqData = { name:registerFormDetails.name.value, email:registerFormDetails.email.value, password:registerFormDetails.password.value }
+    let reqData = { name: registerFormDetails.name.value, email: registerFormDetails.email.value, password: registerFormDetails.password.value }
     const config = {
       headers: {
         'Content-Type': 'application/json'
       }
     }
 
-      // let data = { name:registerFormDetails.name.value, email: registerFormDetails.email.value, password: registerFormDetails.password.value }
-      //   authentic.register("http://localhost:5000/users/register", data, response => {
-      //       if (response.status) {
-      //         localStorage.setItem("Token", response.token);
-      //         localStorage.setItem('data', response.record.name)
-      //         // setTimeout(() => {
-                
-      //           navigate('/user')
-      //         // }, 1500)
-      //           // console.log(response.status, "status")
-      //           // navigate('/user')
-      //       }
-    
-      //   })
-    
+    // let data = { name:registerFormDetails.name.value, email: registerFormDetails.email.value, password: registerFormDetails.password.value }
+    //   authentic.register("http://localhost:5000/users/register", data, response => {
+    //       if (response.status) {
+    //         localStorage.setItem("Token", response.token);
+    //         localStorage.setItem('data', response.record.name)
+    //         // setTimeout(() => {
+
+    //           navigate('/user')
+    //         // }, 1500)
+    //           // console.log(response.status, "status")
+    //           // navigate('/user')
+    //       }
+
+    //   })
+
   }
 
   // const register_post = () => {
